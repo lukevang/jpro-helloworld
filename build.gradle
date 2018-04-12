@@ -1,0 +1,69 @@
+
+/**
+ ******************  Script Configuration ******************
+ */
+buildscript {
+  repositories {
+    jcenter()
+
+    maven {
+      url "http://sandec.bintray.com/repo"
+    }
+  }
+
+  dependencies {
+    classpath 'com.sandec.jpro:jpro-plugin-gradle:2018.1.1'
+  }
+}
+
+repositories {
+  jcenter()
+}
+
+
+/**
+ ******************  Java Configuration ******************
+ */
+apply plugin: 'java'
+apply plugin: 'application'
+
+compileJava {
+  sourceCompatibility = 1.8
+  targetCompatibility = 1.8
+}
+
+
+jar {
+  manifest {
+    attributes 'Main-Class': 'com.jpro.hellojpro.HelloJProMain'
+  }
+}
+
+/**
+ ******************  jpro Configuration ******************
+ */
+apply plugin: 'com.sandec.jpro'
+
+
+/**
+ * App Main Class
+ */
+mainClassName = 'com.jpro.hellojpro.HelloJProMain'
+
+/**
+ * jpro settings
+ */
+jpro {
+  JVMArgs << '-agentlib:jdwp=transport=dt_socket,server=y,address=5006,suspend=y'
+
+  //jpro server port
+  port = 8080
+
+  //jpro version (optional)
+  jproVersion = "2018.1.1"
+
+  openingPath = ""
+}
+
+task stage(dependsOn: ['build', 'clean'])
+build.mustRunAfter clean
